@@ -16,7 +16,6 @@
     _datetime = [fields objectForKey:@"datetime"];
     _article = [fields objectForKey:@"article"];
     NSURL *url = [NSURL URLWithString:[fields objectForKey:@"thumbnail"]];
-    NSData *data = [NSData dataWithContentsOfURL:url];
     _thumbnailUrl = url;
     return self;
 }

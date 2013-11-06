@@ -12,5 +12,5 @@
 
 @interface Grabber : NSObject
 
-+ (NSArray *) grabNews;
++ (NSArray *) grabNews; //TODO do it async
 @end
