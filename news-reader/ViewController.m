@@ -6,11 +6,12 @@
 //  Copyright (c) 2013 AlDigit. All rights reserved.
 //
 
-#define CELL_HEIGHT 70
+#define GENERAL_SIZE_CONST 90
 
 #import "ViewController.h"
 #import "Grabber.h"
 #import "NewsItem.h"
+#import "Cell.h"
 
 
 @interface ViewController () {
@@ -19,9 +20,7 @@
 
 @property (weak, nonatomic) IBOutlet UITableView *newsTable;
 
-@property (weak,nonatomic) NSMutableArray *titles;
-@property (weak,nonatomic) NSMutableArray *descriptions;
-@property (weak, nonatomic) NSMutableArray *items;
+- (NSString *) convertDate:(NSString *) date;
 
 @end
 
@@ -55,19 +54,18 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSString *cellIdentifier = @"Cell";
+     NSString *cellIdentifier = @"Cell";
     
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    Cell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
-        cell.textLabel.backgroundColor = [UIColor clearColor];
-        cell.textLabel.numberOfLines = 1;
-        cell.detailTextLabel.backgroundColor = [UIColor clearColor];
-        cell.detailTextLabel.numberOfLines = 2;
+        cell = [[Cell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
     }
     NewsItem *item = [news objectAtIndex:indexPath.row];
+    
+    cell.dateLabel.text = [self convertDate:item.datetime ];
     cell.textLabel.text =  item.title;
-    cell.detailTextLabel.text = item.description; 
+    cell.detailTextLabel.text = item.description;
+    
     cell.imageView.image =  [UIImage imageNamed:@"placeholder.png"];
     
     UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc]initWithFrame:CGRectMake(32,34,0,0)];
@@ -87,9 +85,18 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return CELL_HEIGHT;
+    return GENERAL_SIZE_CONST;
 }
 
-
+- (NSString *) convertDate:(NSString *) dateString
+{
+    
+    NSTimeInterval interval = [dateString intValue];
+    NSDate *nsDate = [NSDate dateWithTimeIntervalSince1970:interval];
+    NSDateFormatter *formatter=[[NSDateFormatter alloc]init];
+    [formatter setLocale:[NSLocale currentLocale]];
+    [formatter setDateFormat:@"dd.MM.yyyy"];
+    return [formatter stringFromDate:nsDate];
+}
 
 @end
